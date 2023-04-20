@@ -17,7 +17,6 @@ const ngZorroConfig: NzConfig = {}
 const zorroPrviders = [{ provide: NZ_CONFIG, useValue: ngZorroConfig }]
 
 
-
 @NgModule({
   declarations: [],
   imports: [

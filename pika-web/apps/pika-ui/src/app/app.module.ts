@@ -1,11 +1,8 @@
 import { LOCALE_ID, NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { NxWelcomeComponent } from './nx-welcome.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { es_ES } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
-import es from '@angular/common/locales/es';
 import { default as ngLang } from "@angular/common/locales/es";
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -22,9 +19,13 @@ import { StartupService } from "./core";
 import { Observable } from "rxjs";
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { GlobalConfigModule } from './global-config.module';
+import {
+  METADATOS_API_BASE_URL,
+  MetadatosClient,
+} from '@pika-web/pika-cliente-api';
 
 const LANG = {
-  abbr: 'zh',
+  abbr: 'es',
   ng: ngLang,
   zorro: zorroLang,
   date: dateLang,
@@ -71,7 +72,12 @@ const APPINIT_PROVIDES = [
   ],
   providers: [
     // { provide: NZ_I18N, useValue: es_ES }
-    ...LANG_PROVIDES, ...I18NSERVICE_PROVIDERS, ...APPINIT_PROVIDES
+    ...LANG_PROVIDES, ...I18NSERVICE_PROVIDERS, ...APPINIT_PROVIDES,
+    MetadatosClient,
+    {
+      provide: METADATOS_API_BASE_URL,
+      useValue: 'https://localhost:7001',
+    },
   ],
   bootstrap: [AppComponent],
 })

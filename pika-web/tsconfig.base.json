@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@pika-web/pika-api": ["libs/pika-api/src/index.ts"],
+      "@pika-web/pika-cliente-api": ["libs/pika-cliente-api/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
