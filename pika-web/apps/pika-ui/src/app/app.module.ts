@@ -12,6 +12,10 @@ import es from '@angular/common/locales/es';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  METADATOS_API_BASE_URL,
+  MetadatosClient,
+} from '@pika-web/pika-cliente-api';
 
 registerLocaleData(es);
 
@@ -26,7 +30,12 @@ registerLocaleData(es);
     BrowserAnimationsModule,
   ],
   providers: [
-    { provide: NZ_I18N, useValue: es_ES }
+    { provide: NZ_I18N, useValue: es_ES },
+    MetadatosClient,
+    {
+      provide: METADATOS_API_BASE_URL,
+      useValue: 'https://localhost:7001',
+    },
   ],
   bootstrap: [AppComponent],
 })
