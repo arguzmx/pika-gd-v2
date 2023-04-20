@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, HostListener } from "@angular/core";
-import screenfull from 'screenfull';
+import screenfull from "screenfull";
 
 @Component({
     selector: 'header-fullscreen',
