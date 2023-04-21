@@ -22,7 +22,7 @@
       "injectionTokenType": "InjectionToken",
       "rxJsVersion": 7.0,
       "dateTimeType": "Date",
-      "nullValue": "Undefined",
+      "nullValue": "Null",
       "generateClientClasses": true,
       "generateClientInterfaces": true,
       "generateOptionalParameters": false,
@@ -68,7 +68,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../../../pike-cliente-api/src/cliente-metadatos.ts",
+      "output": "../lib/cliente-metadatos.ts",
       "newLineBehavior": "Auto"
     }
   }
