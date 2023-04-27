@@ -8,4 +8,23 @@ import { MetadatosService } from '../../services/metadatos.service';
   providers: [MetadatosService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditorTabularComponent {}
+export class EditorTabularComponent {
+
+  createOrUpdateEntity: string = "create"
+  isVisible: boolean = false
+  entityData: object = {}
+
+  showEntityEdit() {
+    this.isVisible = true
+  }
+
+  isVisibleChange($event: boolean) {
+    this.isVisible = $event
+  }
+
+  recieveEntityData($event: object) {
+    this.entityData = $event
+    console.log(this.entityData);
+  }
+
+}

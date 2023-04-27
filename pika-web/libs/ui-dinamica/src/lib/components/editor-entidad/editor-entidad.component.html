@@ -1,1 +1,17 @@
-<p>editor-entidad works!</p>
+<nz-modal [nzWidth]="defineSize() + '%'" [(nzVisible)]="isVisible" [nzMaskClosable]=false nzTitle="Editor Entidad"
+    (nzOnCancel)="handleCancel()">
+    <ng-container *nzModalContent="">
+        <form [formGroup]="form">
+            <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+        </form>
+        <div style="margin-top: 2%;">
+            <button nz-button nzType="primary" (click)="editEntity()">Editar</button>
+            <button nz-button nzType="primary" (click)="updateEntity()" style="float: right;">Actualizar</button>
+        </div>
+        {{createOrUpdateEntity}}
+    </ng-container>
+    <div *nzModalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
+        <button nz-button nzType="primary" [disabled]="form.invalid" (click)="sendData()">Aceptar</button>
+    </div>
+</nz-modal>

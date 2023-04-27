@@ -9,7 +9,7 @@ import {
 @Injectable()
 export class MetadatosService implements IMetadatosService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
+  constructor() { }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ObtieneMetadatosEntidad(_entidadId: string): Entidad {
@@ -33,6 +33,22 @@ export class MetadatosService implements IMetadatosService {
             mostrarEnTabla: true,
             alternarEnTabla: true,
           },
+        },
+        {
+          id: "id-LogicoFalse",
+          nombre: "i18n-LogicoFalse",
+          requerida: true,
+          buscable: true,
+          ordenable: true,
+          visible: true,
+          tipo: TipoDatos.Logico,
+          urlMacroCliente: "./macro",
+          valorDefault: "false",
+          configuracionTabular: {
+            indice: 0,
+            mostrarEnTabla: true,
+            alternarEnTabla: true
+          }
         },
         {
           id: 'id-ListaSeleccionSimple',

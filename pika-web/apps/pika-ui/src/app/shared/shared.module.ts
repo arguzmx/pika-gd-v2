@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 import { AlainThemeModule } from "@delon/theme";
 
 import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
+import { UiDinamicaModule } from '@pika-web/ui-dinamica';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
     FormsModule,
     RouterModule,
     AlainThemeModule,
+    UiDinamicaModule,
     ...SHARED_ZORRO_MODULES
   ]
 })

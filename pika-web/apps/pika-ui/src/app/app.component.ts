@@ -10,20 +10,20 @@ import { MetadatosClient, Propiedad } from '@pika-web/pika-cliente-api';
 export class AppComponent implements OnInit {
   title = 'pika-ui';
 
-  constructor(private metadatos: MetadatosClient) {}
+  constructor(private metadatos: MetadatosClient) { }
 
   propiedades: Propiedad[] | undefined = [];
 
   ngOnInit() {
-    this.metadatos.entidad('demo').subscribe(
-      (r) => {
-        this.propiedades = r.propiedades;
-        console.log(r);
-      },
-      (ex) => {
-        console.log(ex);
-      }
-    );
-    console.log('init');
+    // this.metadatos.entidad('demo').subscribe(
+    //   (r) => {
+    //     this.propiedades = r.propiedades;
+    //     console.log(r);
+    //   },
+    //   (ex) => {
+    //     console.log(ex);
+    //   }
+    // );
+    // console.log('init');
   }
 }

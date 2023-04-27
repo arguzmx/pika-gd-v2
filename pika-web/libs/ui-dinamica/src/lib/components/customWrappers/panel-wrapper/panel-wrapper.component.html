@@ -1,0 +1,11 @@
+<div style="margin-right: 5%;">
+    <div [ngClass]="required()" style="margin-top: 5%;">
+        {{this.props.label}}
+    </div>
+    <div>
+        <ng-container #fieldComponent></ng-container>
+    </div>
+    <div class="showError" *ngIf="this.showError">
+        i18n-error
+    </div>
+</div>

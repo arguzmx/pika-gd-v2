@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { registerLocaleData } from '@angular/common';
 import { default as ngLang } from "@angular/common/locales/es";
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared/shared.module';
@@ -23,6 +23,7 @@ import {
   METADATOS_API_BASE_URL,
   MetadatosClient,
 } from '@pika-web/pika-cliente-api';
+import { UiDinamicaModule } from '@pika-web/ui-dinamica';
 
 const LANG = {
   abbr: 'es',
@@ -68,7 +69,9 @@ const APPINIT_PROVIDES = [
     LayoutModule,
     RoutesModule,
     CoreModule,
-    NzNotificationModule
+    NzNotificationModule,
+    ReactiveFormsModule,
+    UiDinamicaModule
   ],
   providers: [
     // { provide: NZ_I18N, useValue: es_ES }
