@@ -6,6 +6,7 @@ import { AlainThemeModule } from "@delon/theme";
 
 import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
 import { UiDinamicaModule } from '@pika-web/ui-dinamica';
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { UiDinamicaModule } from '@pika-web/ui-dinamica';
     RouterModule,
     AlainThemeModule,
     UiDinamicaModule,
+    AgGridModule,
     ...SHARED_ZORRO_MODULES
   ]
 })

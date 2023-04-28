@@ -44,6 +44,7 @@ import { HeaderRTLComponent } from './basic/widgets/rtl.component';
 import { HeaderSearchComponent } from './basic/widgets/search.component';
 import { HeaderTaskComponent } from './basic/widgets/task.component';
 import { HeaderUserComponent } from './basic/widgets/user.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 const PASSPORT = [LayoutPassportComponent];
@@ -68,7 +69,8 @@ const PASSPORT = [LayoutPassportComponent];
     NzSpinModule,
     NzBadgeModule,
     NzAvatarModule,
-    NzCardModule
+    NzCardModule,
+    SharedModule
   ],
   declarations: [...COMPONENTS, ...PASSPORT, ...HEADERCOMPONENTS],
   exports: [...PASSPORT],

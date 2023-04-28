@@ -18,6 +18,8 @@ import { TimePickerComponent } from './components/customDateComponents/time-pick
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { PanelWrapperComponent } from './components/customWrappers/panel-wrapper/panel-wrapper.component';
 import { NzGridModule } from "ng-zorro-antd/grid";
+import { AgGridModule } from "ag-grid-angular";
+import { NzSpaceModule } from "ng-zorro-antd/space";
 
 const TYPESFORM = [
   { name: 'customDate', wrappers: ['form-field'] },
@@ -53,17 +55,15 @@ const WRAPPERSFORM = [
     NzModalModule,
     ReactiveFormsModule,
     FormsModule,
-    FormlyModule.forRoot({
-      validationMessages: [...VALIDATIONMESSAGESFORM],
-      types: [...TYPESFORM],
-      wrappers: [...WRAPPERSFORM]
-    }),
+    FormlyModule.forRoot({ validationMessages: [...VALIDATIONMESSAGESFORM], types: [...TYPESFORM], wrappers: [...WRAPPERSFORM] }),
     FormlyBootstrapModule,
     FormlyNgZorroAntdModule,
     NzDatePickerModule,
     NzTimePickerModule,
     NzSelectModule,
-    NzGridModule
+    NzGridModule,
+    AgGridModule,
+    NzSpaceModule
   ],
   exports: [
     EditorTabularComponent,

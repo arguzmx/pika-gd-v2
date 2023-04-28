@@ -25,7 +25,10 @@ export class EditorEntidadComponent implements OnChanges {
   selectOptions: any = []
   deviceType: string = ''
   value: any
+
+  //antcol debera ser reornado desde fuera para definir columnas
   antCol: string = "ant-col-8"
+
   subtypeForm: string = ''
   haveSubtype: boolean = false
   isMultiSelect: boolean = false
@@ -38,13 +41,13 @@ export class EditorEntidadComponent implements OnChanges {
   };
 
   constructor(
-    private metadaService: MetadatosService,
+    private metadataService: MetadatosService,
     private infoService: InformationService
   ) { }
 
   ngOnChanges(): void {
     try {
-      let entity = this.metadaService.ObtieneMetadatosEntidad("entidad-demo")
+      let entity = this.metadataService.ObtieneMetadatosEntidad("entidad-demo")
       this.deviceType = this.infoService.getOS()
       this.fields.push({
         fieldGroupClassName: 'ant-row',
