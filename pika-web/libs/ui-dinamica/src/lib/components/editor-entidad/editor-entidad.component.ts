@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { OrdenamientoLista, TipoDatos } from '@pika-web/pika-cliente-api';
 import { InformationService } from '../../services/information.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'pika-web-editor-entidad',
@@ -25,6 +26,7 @@ export class EditorEntidadComponent implements OnChanges {
   selectOptions: any = []
   deviceType: string = ''
   value: any
+  activeLang = 'es'
 
   //antcol debera ser reornado desde fuera para definir columnas
   antCol: string = "ant-col-8"
@@ -40,19 +42,50 @@ export class EditorEntidadComponent implements OnChanges {
     },
   };
 
+  translateObj: any
+  aux: any
+
   constructor(
     private metadataService: MetadatosService,
-    private infoService: InformationService
-  ) { }
+    private infoService: InformationService,
+    public translate: TranslateService
+  ) {
+    this.translate.setDefaultLang(this.activeLang)
+  }
 
   ngOnChanges(): void {
     try {
       let entity = this.metadataService.ObtieneMetadatosEntidad("entidad-demo")
       this.deviceType = this.infoService.getOS()
-      this.fields.push({
-        fieldGroupClassName: 'ant-row',
-        fieldGroup: this.setFormProps(entity)
+      this.translateObj = { id: '', val: '' }
+      entity.i18n?.forEach((data, index) => {
+        // Object.keys(data.idioma).forEach(key => {
+        //   if (key == this.activeLang) {
+        //     console.log(key);
+        //   }
+        // })
+
+        if (data.idioma == this.activeLang) {
+          data.traducciones!.forEach(trans => {
+            console.log(trans.traduccion);
+            this.aux = trans.clave!.replace('-', '')
+            this.translateObj.id = trans.clave!
+            this.translateObj.val = trans.traduccion!
+          })
+        }
+
+        //this.translateObj = data.traducciones![index].traduccion![this.aux]
+        //this.translateObj = this.aux as keyof object
+        //this.translateObj = data.traducciones![index].traduccion!
+
+
       })
+      console.log("object", this.translateObj);
+
+      // this.fields.push({
+      //   fieldGroupClassName: 'ant-row',
+      //   fieldGroup: this.setFormProps(entity)
+      // })
     } catch (error) {
       console.log(error);
     }
@@ -99,9 +132,12 @@ export class EditorEntidadComponent implements OnChanges {
             key: data.id,
             type: this.defineFormProperties(data.tipo, data.valorDefault),
             defaultValue: this.value,
-            props: { label: data.nombre, required: data.requerida },
+            props: {
+              label: this.translate.instant(data.id),
+              required: data.requerida
+            },
             wrappers: ['panel'],
-            templateOptions: { required: data.requerida, label: data.nombre }
+            templateOptions: { required: data.requerida }
           })
           if (this.haveSubtype) { this.subFields[index].props!.type = this.subtypeForm }
           if (this.isMultiSelect) { this.subFields[index].props!['multiple'] = true }

@@ -27,4 +27,6 @@ export class EditorTabularComponent {
     console.log(this.entityData);
   }
 
+
+
 }

@@ -20,6 +20,7 @@ import { PanelWrapperComponent } from './components/customWrappers/panel-wrapper
 import { NzGridModule } from "ng-zorro-antd/grid";
 import { AgGridModule } from "ag-grid-angular";
 import { NzSpaceModule } from "ng-zorro-antd/space";
+import { TranslateModule } from "@ngx-translate/core";
 
 const TYPESFORM = [
   { name: 'customDate', wrappers: ['form-field'] },
@@ -63,7 +64,8 @@ const WRAPPERSFORM = [
     NzSelectModule,
     NzGridModule,
     AgGridModule,
-    NzSpaceModule
+    NzSpaceModule,
+    TranslateModule.forRoot({})
   ],
   exports: [
     EditorTabularComponent,
