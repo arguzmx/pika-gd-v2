@@ -9,7 +9,7 @@ import {
 @Injectable()
 export class MetadatosService implements IMetadatosService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() { }
+  constructor() {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ObtieneMetadatosEntidad(_entidadId: string): Entidad {
@@ -35,20 +35,20 @@ export class MetadatosService implements IMetadatosService {
           },
         },
         {
-          id: "id-LogicoFalse",
-          nombre: "i18n-LogicoFalse",
+          id: 'id-LogicoFalse',
+          nombre: 'i18n-LogicoFalse',
           requerida: true,
           buscable: true,
           ordenable: true,
           visible: true,
           tipo: TipoDatos.Logico,
-          urlMacroCliente: "./macro",
-          valorDefault: "false",
+          urlMacroCliente: './macro',
+          valorDefault: 'false',
           configuracionTabular: {
             indice: 0,
             mostrarEnTabla: true,
-            alternarEnTabla: true
-          }
+            alternarEnTabla: true,
+          },
         },
         {
           id: 'id-ListaSeleccionSimple',
@@ -284,6 +284,106 @@ export class MetadatosService implements IMetadatosService {
             mostrarEnTabla: true,
             alternarEnTabla: true,
           },
+        },
+      ],
+      i18n: [
+        {
+          idioma: 'es',
+          traducciones: [
+            {
+              clave: 'id-Logico',
+              traduccion: 'Campo lógico',
+            },
+            {
+              clave: 'id-LogicoFalse',
+              traduccion: 'Campo lógico FALSO',
+            },
+            {
+              clave: 'id-ListaSeleccionSimple',
+              traduccion: 'Campo Lista Simple',
+            },
+            {
+              clave: 'id-Fecha',
+              traduccion: 'Campo tipo fecha',
+            },
+            {
+              clave: 'id-FechaHora',
+              traduccion: 'Campo tipo fecha/hora',
+            },
+            {
+              clave: 'id-Decimal',
+              traduccion: 'Campo decimal',
+            },
+            {
+              clave: 'id-Entero',
+              traduccion: 'Campo entero',
+            },
+            {
+              clave: 'id-Hora',
+              traduccion: 'Campo sólo hora',
+            },
+            {
+              clave: 'id-ListaSeleccionMultiple',
+              traduccion: 'Campo lista múltiple',
+            },
+            {
+              clave: 'id-Texto',
+              traduccion: 'Campo Texto',
+            },
+            {
+              clave: 'id-TextoIndexado',
+              traduccion: 'Campo Texto Indexado',
+            },
+          ],
+        },
+        {
+          idioma: 'en',
+          traducciones: [
+            {
+              clave: 'id-Logico',
+              traduccion: 'Logic field',
+            },
+            {
+              clave: 'id-LogicoFalse',
+              traduccion: 'False logic field',
+            },
+            {
+              clave: 'id-ListaSeleccionSimple',
+              traduccion: 'Single select List',
+            },
+            {
+              clave: 'id-Fecha',
+              traduccion: 'Date only field',
+            },
+            {
+              clave: 'id-FechaHora',
+              traduccion: 'Date/Time field',
+            },
+            {
+              clave: 'id-Decimal',
+              traduccion: 'Decimal field',
+            },
+            {
+              clave: 'id-Entero',
+              traduccion: 'Integer field',
+            },
+            {
+              clave: 'id-Hora',
+              traduccion: 'Only time field',
+            },
+            {
+              clave: 'id-ListaSeleccionMultiple',
+              traduccion: 'Multiple select field',
+            },
+            {
+              clave: 'id-Texto',
+              traduccion: 'Texto field',
+            },
+            {
+              clave: 'id-TextoIndexado',
+              traduccion: 'Indexed text field',
+            },
+          ],
         },
       ],
     };
