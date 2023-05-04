@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MetadatosService } from '../../services/metadatos.service';
 import { Entidad } from '@pika-web/pika-cliente-api';
 import { Observable } from 'rxjs';
 import { GridOptions } from 'ag-grid-community';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'pika-web-tabla-dinamica',
@@ -13,22 +12,30 @@ import { HttpClient } from '@angular/common/http';
 })
 export class TablaDinamicaComponent implements OnInit {
 
-  constructor(private metadataService: MetadatosService, private http: HttpClient) { }
-
+  constructor(
+    private metadataService: MetadatosService
+  ) {
+  }
   columnDefs = new Array
   rowData = new Array
   gridOptions$: Observable<GridOptions>
+  entity: any
+  activeLang: string = 'en'
+  dic: any[] = [];
+  obj: any
+  gridOptions = {}
 
   ngOnInit(): void {
-    let entity = this.metadataService.ObtieneMetadatosEntidad("entidad-demo")
-    this.setData(entity)
+    this.entity = this.metadataService.ObtieneMetadatosEntidad("entidad-demo")
+    this.obj = this.metadataService.getLang(this.entity, this.activeLang)
+    this.setData()
   }
 
-  setData(entity: Entidad) {
-    entity.propiedades?.forEach(data => {
+  setData() {
+    this.entity.propiedades?.forEach((data: any, index: number) => {
       if (data.configuracionTabular?.mostrarEnTabla) {
-        this.columnDefs.push({ field: data.nombre })
-        this.rowData.push({ [data.nombre!]: data.valorDefault })
+        this.columnDefs.push({ field: this.obj[data.id] })
+        this.rowData.push({ [this.obj[data.id!]]: data.valorDefault })
       }
     })
   }

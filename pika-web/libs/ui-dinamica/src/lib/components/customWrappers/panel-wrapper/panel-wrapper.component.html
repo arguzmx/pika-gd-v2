@@ -1,6 +1,6 @@
 <div style="margin-right: 5%;">
     <div [ngClass]="required()" style="margin-top: 5%;">
-        {{this.props.label}}
+        {{this.props.label! | translate}}
     </div>
     <div>
         <ng-container #fieldComponent></ng-container>

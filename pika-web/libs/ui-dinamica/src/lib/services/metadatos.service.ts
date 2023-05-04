@@ -9,7 +9,9 @@ import {
 @Injectable()
 export class MetadatosService implements IMetadatosService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
+  dic: any[] = [];
+  obj: any
+  constructor() { }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ObtieneMetadatosEntidad(_entidadId: string): Entidad {
@@ -388,4 +390,22 @@ export class MetadatosService implements IMetadatosService {
       ],
     };
   }
+
+  getLang(entity: Entidad, activeLang: string) {
+    entity.i18n?.forEach((data: any) => {
+      if (data.idioma == activeLang && this.dic.length == 0) {
+        data.traducciones!.forEach((trans: any) => {
+          var temp: any = {};
+          const key: string = trans.clave ?? "";
+          temp[key] = trans.traduccion;
+          this.dic.push(temp)
+        })
+        this.obj = Object.assign({}, ...this.dic)
+      }
+    })
+    return this.obj
+  }
+
 }
+
+
