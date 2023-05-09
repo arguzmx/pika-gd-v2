@@ -2,16 +2,19 @@ import { Injectable } from '@angular/core';
 import { IMetadatosService } from './imetadatos.service';
 import {
   Entidad,
+  EntidadMockPagina,
   OrdenamientoLista,
   TipoDatos,
 } from '@pika-web/pika-cliente-api';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, map } from 'rxjs';
 
 @Injectable()
 export class MetadatosService implements IMetadatosService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   dic: any[] = [];
   obj: any
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ObtieneMetadatosEntidad(_entidadId: string): Entidad {
@@ -389,6 +392,40 @@ export class MetadatosService implements IMetadatosService {
         },
       ],
     };
+  }
+
+  a() {
+    const httOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }
+    let body = {
+      "id": "string",
+      "paginado": {
+        "indice": 1,
+        "tamano": 10
+      }
+    }
+    return this.http.post<any>('https://localhost:7001/metadatos/buscar', body, httOptions).pipe(
+      map((response: Response) => response)
+    )
+  }
+
+  ObtieneMetadatosTabla() {
+    const httOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }
+    let body = {
+      "id": "string",
+      "paginado": {
+        "indice": 1,
+        "tamano": 10
+      }
+    }
+    return this.http.post<EntidadMockPagina[]>('https://localhost:7001/metadatos/buscar', body, httOptions)
   }
 
   getLang(entity: Entidad, activeLang: string) {

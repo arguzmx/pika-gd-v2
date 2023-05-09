@@ -29,7 +29,7 @@ export class EditorEntidadComponent implements OnChanges {
   activeLang = 'es'
   entity: any
 
-  //antcol debera ser reornado desde fuera para definir columnas
+  //antcol debera ser retornado desde fuera para definir columnas
   antCol: string = "ant-col-8"
   a: any
 
