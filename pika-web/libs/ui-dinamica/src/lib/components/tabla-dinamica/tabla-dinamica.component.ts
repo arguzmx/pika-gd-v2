@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MetadatosService } from '../../services/metadatos.service';
-import { firstValueFrom, take } from 'rxjs';
-import { ColDef, FirstDataRenderedEvent, GridApi } from 'ag-grid-community';
+import { Observable, firstValueFrom, of, take } from 'rxjs';
+import { ColDef, FirstDataRenderedEvent, GetRowIdFunc, GetRowIdParams, GridApi, GridOptions, IDatasource, IGetRowsParams, SelectionChangedEvent, PaginationNumberFormatterParams, PaginationChangedEvent } from 'ag-grid-community';
 import { TranslateService } from "@ngx-translate/core";
-import { EntidadMockPagina } from '@pika-web/pika-cliente-api';
+import { EntidadMock, EntidadMockPagina, TipoDatos } from '@pika-web/pika-cliente-api';
+import { AgGridAngular } from 'ag-grid-angular';
 
 @Component({
   selector: 'pika-web-tabla-dinamica',
@@ -15,11 +16,15 @@ export class TablaDinamicaComponent implements OnInit {
 
   constructor(
     private metadataService: MetadatosService,
-    private translate: TranslateService,
-    private ref: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+
   ) {
+
   }
-  private gridApi: GridApi
+
+
+
+  gridApi: GridApi
   columnDefs = new Array
   rowData = new Array
   entity: any
@@ -27,9 +32,35 @@ export class TablaDinamicaComponent implements OnInit {
   dic: any[] = [];
   obj: any
   totalKeys: number = 0
-  tableEntity: any
-  paginationPageSize: number = 0
-  gridOptions = {}
+  tableEntity: EntidadMockPagina
+  paginationPageSize: number | undefined = 0
+  isVisible: boolean = false
+  selectedData: any
+  numberPage: number | undefined = 0
+  agGridParams: AgGridAngular
+  gridColumnApi: any;
+
+  dataTable: any
+  id: string = 'id'
+  disableButton: boolean = true
+  currentPage: number = 0
+
+
+  body = {
+    "id": "string",
+    "paginado": {
+      "indice": this.numberPage,
+      "tamano": 10
+    }
+  }
+
+  gridOptions: GridOptions = {
+    rowModelType: 'infinite',
+    paginationPageSize: 10,
+    cacheBlockSize: 10
+  }
+
+  tamano: number | undefined = 0
 
   localeEs: any = {
     page: 'Pagina',
@@ -38,30 +69,9 @@ export class TablaDinamicaComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.entity = this.metadataService.ObtieneMetadatosEntidad("entidad-demo")
-    //this.obj = this.metadataService.getLang(this.entity, this.activeLang)
-    //this.setData()
-    this.getData()
-
-    // this.gridOptions = {
-    //   //localeTextFunc: (key: string, defaultValue: string) => this.setLang()[key] || defaultValue
-    //   pagination: true,
-    //   columnDefs: [
-    //     { field: '1' },
-    //     { field: '2' }
-    //   ],
-    //   localeTextFunc: (key: string, defaultValue: string) => {
-    //     if (Object.keys(this.localeEs).includes(key)) {
-    //       const data = this.translate.instant(this.localeEs[key]);
-    //       return data === key ? defaultValue : data;
-    //     }
-    //   },
-    //   stopEditingWhenGridLosesFoces: true
-    //   //rowModelType: 'infinite'
-    // }
-
   }
 
+  public getRowId: GetRowIdFunc = (params: GetRowIdParams) => params.data.id
 
   setLang() {
     if (this.activeLang == 'es') {
@@ -69,62 +79,79 @@ export class TablaDinamicaComponent implements OnInit {
     }
   }
 
-  onFirstDataRendered(params: FirstDataRenderedEvent) {
-    console.log(this.tableEntity.paginado.indice);
+  onPaginationChanged($event: PaginationChangedEvent) {
 
-    params.api.paginationGoToPage(this.tableEntity.paginado.indice);
   }
 
-  getData() {
-    let entityTable
-    const res = this.metadataService.ObtieneMetadatosTabla().subscribe(res => {
-      this.ref.detectChanges()
-      this.gridOptions = {
-        //localeTextFunc: (key: string, defaultValue: string) => this.setLang()[key] || defaultValue
-        pagination: true,
-        columnDefs: [
-          { field: '1' },
-          { field: '2' }
-        ],
-        localeTextFunc: (key: string, defaultValue: string) => {
-          if (Object.keys(this.localeEs).includes(key)) {
-            const data = this.translate.instant(this.localeEs[key]);
-            return data === key ? defaultValue : data;
-          }
-        },
-        stopEditingWhenGridLosesFoces: true
-        //rowModelType: 'infinite'
-      }
-    })
-    //entityTable = await firstValueFrom(res)
-    //this.setData(entityTable)
-  }
-
-  setData(entityTable: any) {
-    console.log("value in setdata", entityTable);
-
-    //this.tableEntity = this.metadataService.ObtieneMetadatosTabla()
-    //Aconsole.log(this.tableEntity);
-
-    this.paginationPageSize = entityTable.paginado.tamano
-    entityTable.elementos.forEach((data: any, index: number) => {
-      this.totalKeys = Object.keys(data).length
-      if (this.columnDefs.length < this.totalKeys) {
-        for (var key in data) {
-          this.columnDefs.push({ field: key })
-        }
-      }
-      entityTable.elementos[index].idFecha = entityTable.elementos[index].idFecha.split('T')[0]
-      entityTable.elementos[index].idHora = entityTable.elementos[index].idHora.split('T')[1]
-      entityTable.elementos[index].idFechaHora = entityTable.elementos[index].idFechaHora.replace('T', ' ')
-      this.rowData.push(data)
-    })
-    this.gridApi.refreshCells()
-  }
 
   public defaultColDef: ColDef = {
     minWidth: 5,
     resizable: true
+  }
+
+  receiveNewData($event: EntidadMock) {
+    let i: number = 0
+    let newDate
+    let newDateTime
+    let newTime
+    const rowNode = this.gridApi.getRowNode($event.id!)
+    for (var k in $event) {
+      let val = Object.values($event)[i]
+      if (k == this.id + TipoDatos.Fecha) {
+        newDate = val.toISOString().split('T')[0]
+        val = newDate
+      } else if (k == this.id + TipoDatos.FechaHora) {
+        newDateTime = (val.getFullYear() + '-' + ('0' + (val.getMonth() + 1)).slice(-2) + '-' + ('0' + val.getDate()).slice(-2)) + ' ' + val.getHours() + ':' + val.getMinutes() + ':' + val.getSeconds()
+        val = newDateTime
+      } else if (k == this.id + TipoDatos.Hora) {
+        newTime = val.getHours() + ':' + val.getMinutes() + ':' + val.getSeconds()
+        val = newTime
+      }
+      rowNode!.setDataValue(k, val)
+      i++
+    }
+  }
+
+  onGridReady(params: any) {
+    this.gridApi = params.api
+    this.gridColumnApi = params.columnApi
+
+    var dataSourceVar = {
+      getRows: (params: IGetRowsParams) => {
+        this.body.paginado.indice = this.gridApi.paginationGetCurrentPage()
+        this.metadataService.dataTable(this.body)
+          .subscribe((data: any) => {
+            this.totalKeys = Object.keys(data.elementos).length
+            if (this.columnDefs.length < this.totalKeys) {
+              for (var key in data.elementos[0]) { this.columnDefs.push({ field: key }) }
+            }
+            data.elementos.forEach((element: any) => {
+              element.idFecha = element.idFecha.split('T')[0]
+              element.idHora = element.idHora.split('T')[1]
+              element.idFechaHora = element.idFechaHora.replace('T', ' ')
+            })
+            this.gridApi.setColumnDefs(this.columnDefs)
+            params.successCallback(data.elementos, data.total)
+          })
+      }
+    }
+    this.gridApi.setDatasource(dataSourceVar)
+  }
+
+  shareInfo() {
+    this.selectedData = this.gridApi.getSelectedRows()
+    this.isVisible = true
+  }
+
+  isVisibleChange($event: boolean) {
+    this.isVisible = $event
+  }
+
+  onSelectionChanged(event: SelectionChangedEvent) {
+    const selectedData = this.gridApi.getSelectedRows();
+    if (selectedData) {
+      this.disableButton = false
+    }
   }
 
 }

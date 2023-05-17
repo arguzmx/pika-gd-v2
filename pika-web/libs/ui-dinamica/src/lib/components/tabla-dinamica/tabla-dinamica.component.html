@@ -1,6 +1,13 @@
 <div class="ag-theme-alpine">
     <ag-grid-angular style="width: 100%; height: 50vh;" class="ag-theme-alpine" [defaultColDef]="defaultColDef"
-        [rowData]="rowData" [paginationPageSize]="paginationPageSize" [gridOptions]="gridOptions"
-        [enableCellChangeFlash]="true">
+        [gridOptions]="gridOptions" [pagination]=true [getRowId]="getRowId" [rowData]="rowData"
+        [columnDefs]="columnDefs" [enableCellChangeFlash]="true" rowSelection="single" (gridReady)="onGridReady($event)"
+        (selectionChanged)="onSelectionChanged($event)" (paginationChanged)="onPaginationChanged($event)">
     </ag-grid-angular>
 </div>
+
+<button nz-button nzType="primary" [disabled]="disableButton" (click)="shareInfo()">Edit</button>
+
+
+<pika-web-editor-entidad [isVisible]="isVisible" (sendEntityData)="receiveNewData($event)"
+    (isVisibleChange)="isVisibleChange($event)" [rowData]="selectedData"></pika-web-editor-entidad>

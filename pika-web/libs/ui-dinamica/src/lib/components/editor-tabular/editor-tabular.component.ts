@@ -13,6 +13,7 @@ export class EditorTabularComponent {
   createOrUpdateEntity: string = "create"
   isVisible: boolean = false
   entityData: object = {}
+  rowInfo: any
 
   showEntityEdit() {
     this.isVisible = true
@@ -24,9 +25,6 @@ export class EditorTabularComponent {
 
   recieveEntityData($event: object) {
     this.entityData = $event
-    console.log(this.entityData);
   }
-
-
 
 }

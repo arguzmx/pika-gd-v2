@@ -7,7 +7,6 @@ import {
   TipoDatos,
 } from '@pika-web/pika-cliente-api';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map } from 'rxjs';
 
 @Injectable()
 export class MetadatosService implements IMetadatosService {
@@ -213,7 +212,7 @@ export class MetadatosService implements IMetadatosService {
           visible: true,
           tipo: TipoDatos.ListaSeleccionMultiple,
           urlMacroCliente: './macro',
-          valorDefault: 'B',
+          valorDefault: 'B,C',
           configuracionTabular: {
             indice: 7,
             mostrarEnTabla: true,
@@ -394,38 +393,13 @@ export class MetadatosService implements IMetadatosService {
     };
   }
 
-  a() {
+  dataTable(body: any) {
     const httOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     }
-    let body = {
-      "id": "string",
-      "paginado": {
-        "indice": 1,
-        "tamano": 10
-      }
-    }
-    return this.http.post<any>('https://localhost:7001/metadatos/buscar', body, httOptions).pipe(
-      map((response: Response) => response)
-    )
-  }
-
-  ObtieneMetadatosTabla() {
-    const httOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    }
-    let body = {
-      "id": "string",
-      "paginado": {
-        "indice": 1,
-        "tamano": 10
-      }
-    }
-    return this.http.post<EntidadMockPagina[]>('https://localhost:7001/metadatos/buscar', body, httOptions)
+    return this.http.post<EntidadMockPagina>('https://localhost:7001/metadatos/buscar', body, httOptions)
   }
 
   getLang(entity: Entidad, activeLang: string) {

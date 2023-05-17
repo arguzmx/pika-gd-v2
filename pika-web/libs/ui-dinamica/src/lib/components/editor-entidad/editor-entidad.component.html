@@ -2,7 +2,7 @@
     (nzOnCancel)="handleCancel()">
     <ng-container *nzModalContent="">
         <form [formGroup]="form">
-            <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+            <formly-form [model]="model" [fields]="fields" [options]="options" [form]="this.form"></formly-form>
         </form>
         <div style="margin-top: 2%;">
             <button nz-button nzType="primary" (click)="editEntity()">Editar</button>
@@ -12,6 +12,7 @@
     </ng-container>
     <div *nzModalFooter>
         <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
-        <button nz-button nzType="primary" [disabled]="form.invalid" (click)="sendData()">Aceptar</button>
+        <button nz-button nzType="primary" [disabled]="form.invalid" (click)="sendData()"
+            nzDisabled="true">Aceptar</button>
     </div>
 </nz-modal>

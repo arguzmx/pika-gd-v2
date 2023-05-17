@@ -6,4 +6,5 @@ import { FieldType, FieldTypeConfig } from '@ngx-formly/core';
   templateUrl: './date-time-picker.component.html',
   styleUrls: ['./date-time-picker.component.less'],
 })
-export class DateTimePickerComponent extends FieldType<FieldTypeConfig> { }
+export class DateTimePickerComponent extends FieldType<FieldTypeConfig> {
+}
