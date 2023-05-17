@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MetadatosService } from '../../services/metadatos.service';
 import { Observable, firstValueFrom, of, take } from 'rxjs';
-import { ColDef, FirstDataRenderedEvent, GetRowIdFunc, GetRowIdParams, GridApi, GridOptions, IDatasource, IGetRowsParams, SelectionChangedEvent, PaginationNumberFormatterParams, PaginationChangedEvent } from 'ag-grid-community';
+import { ColDef, FirstDataRenderedEvent, GetRowIdFunc, GetRowIdParams, GridApi, GridOptions, IDatasource, IGetRowsParams, SelectionChangedEvent, PaginationNumberFormatterParams, PaginationChangedEvent, GridOptionsService } from 'ag-grid-community';
 import { TranslateService } from "@ngx-translate/core";
 import { EntidadMock, EntidadMockPagina, TipoDatos } from '@pika-web/pika-cliente-api';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -22,8 +22,6 @@ export class TablaDinamicaComponent implements OnInit {
 
   }
 
-
-
   gridApi: GridApi
   columnDefs = new Array
   rowData = new Array
@@ -33,12 +31,13 @@ export class TablaDinamicaComponent implements OnInit {
   obj: any
   totalKeys: number = 0
   tableEntity: EntidadMockPagina
-  paginationPageSize: number | undefined = 0
   isVisible: boolean = false
   selectedData: any
   numberPage: number | undefined = 0
   agGridParams: AgGridAngular
   gridColumnApi: any;
+  cacheBlockSize: number | undefined = 10
+  paginationPageSize: number | undefined = 10
 
   dataTable: any
   id: string = 'id'
@@ -56,8 +55,8 @@ export class TablaDinamicaComponent implements OnInit {
 
   gridOptions: GridOptions = {
     rowModelType: 'infinite',
-    paginationPageSize: 10,
-    cacheBlockSize: 10
+    paginationPageSize: this.paginationPageSize,
+    cacheBlockSize: this.cacheBlockSize
   }
 
   tamano: number | undefined = 0
