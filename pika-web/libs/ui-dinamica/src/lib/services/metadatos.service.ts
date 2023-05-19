@@ -7,6 +7,7 @@ import {
   TipoDatos,
 } from '@pika-web/pika-cliente-api';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class MetadatosService implements IMetadatosService {
@@ -399,6 +400,7 @@ export class MetadatosService implements IMetadatosService {
         'Content-Type': 'application/json'
       })
     }
+
     return this.http.post<EntidadMockPagina>('https://localhost:7001/metadatos/buscar', body, httOptions)
   }
 
