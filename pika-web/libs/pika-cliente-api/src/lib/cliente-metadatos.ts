@@ -218,6 +218,7 @@ export interface Entidad {
 
 export interface Filtro {
     campo?: string | null;
+    negar?: boolean;
     operador?: OperadorFiltro;
     valores?: string[] | null;
     nivelFuzzy?: number | null;

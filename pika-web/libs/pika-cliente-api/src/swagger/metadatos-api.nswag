@@ -52,6 +52,7 @@
       "excludedTypeNames": [],
       "excludedParameterNames": [],
       "handleReferences": false,
+      "generateTypeCheckFunctions": false,
       "generateConstructorInterface": true,
       "convertConstructorInterfaceData": false,
       "importRequiredTypes": true,
