@@ -24,7 +24,7 @@ export interface IMetadatosClient {
      * @param body (optional) 
      * @return Success
      */
-    buscar(body: Consulta | undefined): Observable<EntidadMockPagina>;
+    buscar(body: Consulta | undefined): Observable<Entidad>;
 }
 
 @Injectable()
@@ -111,7 +111,7 @@ export class MetadatosClient implements IMetadatosClient {
      * @param body (optional) 
      * @return Success
      */
-    buscar(body: Consulta | undefined, httpContext?: HttpContext): Observable<EntidadMockPagina> {
+    buscar(body: Consulta | undefined, httpContext?: HttpContext): Observable<Entidad> {
         let url_ = this.baseUrl + "/metadatos/buscar";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -135,14 +135,14 @@ export class MetadatosClient implements IMetadatosClient {
                 try {
                     return this.processBuscar(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<EntidadMockPagina>;
+                    return _observableThrow(e) as any as Observable<Entidad>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<EntidadMockPagina>;
+                return _observableThrow(response_) as any as Observable<Entidad>;
         }));
     }
 
-    protected processBuscar(response: HttpResponseBase): Observable<EntidadMockPagina> {
+    protected processBuscar(response: HttpResponseBase): Observable<Entidad> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -152,7 +152,7 @@ export class MetadatosClient implements IMetadatosClient {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as EntidadMockPagina;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Entidad;
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -216,27 +216,6 @@ export interface Entidad {
     i18n?: I18n[] | null;
 }
 
-export interface EntidadMock {
-    id?: string | null;
-    idLogico?: boolean;
-    idListaSeleccionSimple?: string | null;
-    idFecha?: Date;
-    idFechaHora?: Date;
-    idHora?: Date;
-    idDecimal?: number;
-    idEntero?: number;
-    idListaSeleccionMultiple?: string | null;
-    idTexto?: string | null;
-    idTextoIndexado?: string | null;
-}
-
-export interface EntidadMockPagina {
-    consultaId?: string | null;
-    elementos?: EntidadMock[] | null;
-    total?: number;
-    paginado?: Paginado;
-}
-
 export interface Filtro {
     campo?: string | null;
     operador?: OperadorFiltro;
@@ -259,21 +238,21 @@ export interface Lista {
 }
 
 export enum OperadorFiltro {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
-    _4 = 4,
-    _5 = 5,
-    _6 = 6,
-    _7 = 7,
-    _8 = 8,
-    _100 = 100,
+    Igual = "Igual",
+    Contiene = "Contiene",
+    ComienzaCon = "ComienzaCon",
+    TerminaCon = "TerminaCon",
+    Mayor = "Mayor",
+    MayorIgual = "MayorIgual",
+    Menor = "Menor",
+    MenorIgual = "MenorIgual",
+    Entre = "Entre",
+    TextoCompleto = "TextoCompleto",
 }
 
 export enum Ordenamiento {
-    _0 = 0,
-    _1 = 1,
+    Asc = "asc",
+    Desc = "desc",
 }
 
 export enum OrdenamientoLista {
