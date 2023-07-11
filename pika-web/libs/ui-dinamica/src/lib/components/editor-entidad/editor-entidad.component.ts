@@ -5,7 +5,6 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { OrdenamientoLista, TipoDatos } from '@pika-web/pika-cliente-api';
 import { InformationService } from '../../services/information.service';
 import { TranslateService } from '@ngx-translate/core';
-import { startWith, tap } from 'rxjs';
 
 @Component({
   selector: 'pika-web-editor-entidad',
@@ -95,6 +94,11 @@ export class EditorEntidadComponent implements OnChanges {
     }
   }
 
+  /**
+   * Funcion que crear el formulario en base a datos de table
+   * @param data row de la tabla seleccionado
+   * @returns modal con el formulario creado y listo para la edicion de campos
+   */
   setFormPropsFromTable(data: any) {
     if (this.isVisible) {
       data.forEach((element: any, index: number) => {
@@ -172,7 +176,6 @@ export class EditorEntidadComponent implements OnChanges {
     this.fields = []
     this.subFields = []
     this.form = new FormGroup({})
-
   }
 
   editEntity() {
@@ -192,6 +195,11 @@ export class EditorEntidadComponent implements OnChanges {
     return null
   }
 
+  /**
+   * Funcion que crear el formluario dinamico en base a una entidad
+   * @param entity tipo metadatos
+   * @returns 
+   */
   setFormProps(entity: any) {
     if (this.isVisible) {
       try {
@@ -242,6 +250,12 @@ export class EditorEntidadComponent implements OnChanges {
     return data.lista.elementos.sort((a: any, b: any) => a.nombre.localeCompare(b.nombre))
   }
 
+  /**
+   * Funcion que define los propiedas del formulario dinamico
+   * @param type tipo primario del formulario
+   * @param defaultValue Valor default del formulario
+   * @returns 
+   */
   defineFormProperties(type: string, defaultValue: string) {
     let formType: any = ''
     this.subtypeForm = ''

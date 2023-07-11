@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MetadatosService } from '../../services/metadatos.service';
-import { Observable, firstValueFrom, of, take } from 'rxjs';
 import { ColDef, FirstDataRenderedEvent, GetRowIdFunc, GetRowIdParams, GridApi, GridOptions, IDatasource, IGetRowsParams, SelectionChangedEvent, PaginationNumberFormatterParams, PaginationChangedEvent, GridOptionsService } from 'ag-grid-community';
 import { TranslateService } from "@ngx-translate/core";
 import { EntidadMock, EntidadMockPagina, TipoDatos } from '@pika-web/pika-cliente-api';
@@ -103,6 +102,10 @@ export class TablaDinamicaComponent implements OnInit {
     }
   }
 
+  /**
+   * Construccion de tabla dinamica 
+   * @param params parametros para tabla, se crean por default
+   */
   onGridReady(params: any) {
     this.gridApi = params.api
     this.gridColumnApi = params.columnApi
@@ -125,6 +128,8 @@ export class TablaDinamicaComponent implements OnInit {
                 "value": 1024,
                 "formato": "decimal 2"
               },
+              "email": "hola@.com",
+              "email2": "hola2@.com",
               "idListaSeleccionMultiple": "B,D",
               "idTexto": "John Lennon",
               "idTextoIndexado": "La vida es aquello que te va sucediendo mientras te empeñas en hacer otros planes"

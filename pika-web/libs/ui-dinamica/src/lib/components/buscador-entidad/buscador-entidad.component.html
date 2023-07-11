@@ -1,1 +1,7 @@
-<p>buscador-entidad works!</p>
+<form [formGroup]="form">
+    <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"
+        (modelChange)="addFilter($event)"></formly-form>
+</form>
+<div>
+    <ng-template #viewContainerRef></ng-template>
+</div>

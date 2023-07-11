@@ -1,0 +1,12 @@
+<div class="ant-row">
+    <div class="ant-col-4">
+        {{nombreComponente}}
+    </div>
+    <div class="ant-col-6">
+        <span nz-icon nzType="close" nzTheme="outline" style="float: right; cursor: pointer;"
+            (click)="removeObject()"></span>
+    </div>
+</div>
+<form [formGroup]="form">
+    <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+</form>
