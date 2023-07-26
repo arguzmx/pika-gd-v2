@@ -1,4 +1,4 @@
-<div class="ant-row">
+<div class="ant-row margen-top">
     <div class="ant-col-4">
         {{nombreComponente}}
     </div>
@@ -7,6 +7,11 @@
             (click)="removeObject()"></span>
     </div>
 </div>
-<form [formGroup]="form">
-    <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
-</form>
+<div class="ant-row margen-top">
+    <div class="ant-col-10">
+        <nz-select nzShowSearch nzAllowClear [(ngModel)]="firstValue">
+            <nz-option nzValue="true" nzLabel="true"></nz-option>
+            <nz-option nzValue="false" nzLabel="false"></nz-option>
+        </nz-select>
+    </div>
+</div>

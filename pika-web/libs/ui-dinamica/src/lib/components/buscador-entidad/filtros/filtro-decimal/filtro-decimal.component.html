@@ -1,4 +1,4 @@
-<div class="ant-row">
+<div class="ant-row margen-top">
     <div class="ant-col-4">
         {{nombreComponente}}
     </div>
@@ -7,6 +7,24 @@
             (click)="removeObject()"></span>
     </div>
 </div>
-<form [formGroup]="form">
-    <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
-</form>
+<div class="ant-row margen-top">
+    <div class="ant-col-2">
+        <label nz-checkbox [(ngModel)]="checked">No</label>
+    </div>
+    <div class="ant-col-8">
+        <nz-select nzShowSearch nzAllowClear [(ngModel)]="selectValue">
+            <nz-option *ngFor="let option of operatorArray" [nzLabel]="option.label"
+                [nzValue]="option.value"></nz-option>
+        </nz-select>
+    </div>
+</div>
+<div class="ant-row margen-top">
+    <div class="ant-col-10">
+        <nz-input-number [(ngModel)]="firstValue"></nz-input-number>
+    </div>
+</div>
+<div *ngIf="selectValue == operadorEntre" class="ant-row margen-top">
+    <div class="ant-col-10">
+        <nz-input-number [(ngModel)]="secondValue"></nz-input-number>
+    </div>
+</div>

@@ -1,7 +1,6 @@
 import { Component, ComponentRef, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { OperadorFiltro } from '@pika-web/pika-cliente-api';
+import { Filtro, OperadorFiltro, Propiedad } from '@pika-web/pika-cliente-api';
+import { BuscadorEntidadComponent } from '../../buscador-entidad.component';
 
 @Component({
   selector: 'pika-web-filtro-fecha',
@@ -11,82 +10,58 @@ import { OperadorFiltro } from '@pika-web/pika-cliente-api';
 export class FiltroFechaComponent {
 
   @Input() nombreComponente: string = 'i18nFecha';
-  @Input() propiedades: any[];
+  @Input() propiedad: Propiedad;
   _ref: ComponentRef<any>;
-
-  form = new FormGroup({});
-  model: any = {};
-  options: FormlyFormOptions = {};
+  checked: boolean = false;
+  firstValue?: string;
+  secondValue?: string;
   operatorArray: any[] = []
+  selectValue: any;
+  operadorEntre: string;
+  childUniqueKey: string;
+  parentRef: BuscadorEntidadComponent;
+  operators = OperadorFiltro;
 
-  fields: FormlyFieldConfig[] = [
-    {
-      validators: {
-        validation: [
-          { name: 'dateCompare', options: { errorPath: 'secondFilter' } }
-        ],
-      },
-      fieldGroupClassName: 'ant-row',
-      fieldGroup: [
-        {
-          key: 'no',
-          className: 'ant-col-2',
-          type: 'checkbox',
-          props: {
-            label: 'No'
-          }
-        },
-        {
-          key: 'operador',
-          className: 'ant-col-8',
-          defaultValue: '0',
-          type: 'select',
-          props: {
-            label: 'Operador',
-            placeholder: 'Seleccione una opción',
-            options: this.operatorOptions()
-          }
-        }
-      ]
-    },
-    {
-      fieldGroupClassName: 'ant-row',
-      fieldGroup: [
-        {
-          key: 'firstFilter',
-          className: 'ant-col-10',
-          type: 'customDate',
-          props: {
-            label: "Fecha inicial"
-          }
-        }
-      ]
-    },
-    {
-      fieldGroupClassName: 'ant-row',
-      fieldGroup: [
-        {
-          key: 'secondFilter',
-          className: 'ant-col-10',
-          type: 'customDate',
-          props: {
-            label: 'Fecha final'
-          },
-          expressions: {
-            hide: 'model.operador != "Entre"'
-          }
-        }
-      ]
-    }
-
-  ]
+  ngOnInit(): void {
+    this.operatorOptions();
+  }
 
   operatorOptions() {
-    for (var op in OperadorFiltro) { this.operatorArray.push({ label: op, value: op }) };
-    return this.operatorArray;
+    this.operatorArray.push({ label: this.operators.Igual, value: this.operators.Igual });
+    this.operatorArray.push({ label: this.operators.Entre, value: this.operators.Entre });
+    this.operatorArray.push({ label: this.operators.Mayor, value: this.operators.Mayor });
+    this.operatorArray.push({ label: this.operators.MayorIgual, value: this.operators.MayorIgual });
+    this.operatorArray.push({ label: this.operators.Menor, value: this.operators.Menor });
+    this.operatorArray.push({ label: this.operators.MenorIgual, value: this.operators.MenorIgual });
+    this.operadorEntre = OperadorFiltro.Entre
+  }
+
+  public ObtenerFiltro(): Filtro {
+    if (this.selectValue != this.operadorEntre) {
+      if (this.selectValue != undefined && this.firstValue != undefined) {
+        return {
+          campo: this.childUniqueKey,
+          negar: this.checked,
+          operador: this.selectValue,
+          valores: [this.firstValue!]
+        }
+      }
+    }
+    else {
+      if (this.selectValue != undefined && this.firstValue != undefined && this.secondValue != undefined) {
+        return {
+          campo: this.childUniqueKey,
+          negar: this.checked,
+          operador: this.selectValue,
+          valores: [this.firstValue!, this.secondValue!]
+        }
+      }
+    }
+    return null!;
   }
 
   removeObject() {
+    this.parentRef.isNotSelected(this.childUniqueKey);
     this._ref.destroy();
   }
 

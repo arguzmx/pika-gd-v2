@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
+import { ChangeDetectionStrategy, Component, ComponentRef, OnChanges, OnInit, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { FiltroTextoComponent } from './filtros/filtro-texto/filtro-texto.component';
 import { MetadatosService } from '../../services/metadatos.service';
-import { TipoDatos } from '@pika-web/pika-cliente-api';
+import { Consulta, Filtro, TipoDatos } from '@pika-web/pika-cliente-api';
 import { FiltroDecimalComponent } from './filtros/filtro-decimal/filtro-decimal.component';
 import { FiltroEnteroComponent } from './filtros/filtro-entero/filtro-entero.component';
 import { FiltroFechaComponent } from './filtros/filtro-fecha/filtro-fecha.component';
@@ -20,58 +18,49 @@ import { FiltroTextoIndexadoComponent } from './filtros/filtro-texto-indexado/fi
   styleUrls: ['./buscador-entidad.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BuscadorEntidadComponent {
+export class BuscadorEntidadComponent implements OnInit {
   @ViewChild('viewContainerRef', { read: ViewContainerRef }) container: ViewContainerRef;
 
-
-  form = new FormGroup({});
-  model: any = {};
-  options: FormlyFormOptions = {};
+  selectedFilter: string;
   entity: any
   propertis: any[] = []
-  child_unique_key: any
-  exixtsId: any[] = []
-
-  componentReferences = Array<ComponentRef<any>>()
+  child_unique_key: string
+  listOfSelectedFilters: string[] = []
+  unusedFilters: any[] = []
+  componentRef: ComponentRef<any>;
+  components: any[] = [];
+  consulta: Consulta;
+  filtros: Array<Filtro> = [];
 
   constructor(private metadataService: MetadatosService) { }
 
-  fields: FormlyFieldConfig[] = [
-    {
-      key: 'propiedad',
-      type: 'select',
-      props: {
-        placeholder: 'Seleccione un tipo de dato',
-        label: 'Propiedad',
-        options: this.getMetadata(),
-        change: (field, $event) => {
-          field.props!.options = this.propertis
-        }
-      },
-    }
-  ]
+  ngOnInit(): void {
+    this.getMetadata();
+  }
 
   getMetadata() {
     this.entity = this.metadataService.ObtieneMetadatosEntidad("entidad-demo")
     this.entity.propiedades.forEach((element: any) => {
       if (element.buscable) {
-        this.propertis.push({ label: element.nombre, value: element.valorDefault, tipoDato: element.tipo, id: element.id })
+        this.propertis.push({ label: element.nombre, value: element.id, tipoDato: element.tipo })
       }
     });
-    return this.propertis
   }
 
+  /**
+   * Función que agrega filtros dinamicos en base a lo que recibe de nz-select
+   * @param event evento de nz-select
+   */
   addFilter(event: any): void {
     var filter;
     var filterName: string = ""
     this.propertis.forEach((element: any, index: number) => {
-      if (event.propiedad == element.value) {
+      if (event == element.value) {
         filterName = element.label
         filter = element.tipoDato
-        this.child_unique_key = element.id
+        this.child_unique_key = element.value
       }
     })
-
     if (filter != undefined) {
       switch (filter) {
         case TipoDatos.Decimal:
@@ -105,27 +94,46 @@ export class BuscadorEntidadComponent {
           filter = FiltroTextoIndexadoComponent
           break;
       }
-      var expComponent = this.container.createComponent(filter);
-      expComponent.instance.nombreComponente = filterName
-      expComponent.instance._ref = expComponent;
-      this.componentReferences.push(expComponent)
-
+      this.componentRef = this.container.createComponent(filter);
+      this.componentRef.instance.nombreComponente = filterName
+      this.componentRef.instance._ref = this.componentRef;
+      this.componentRef.instance.childUniqueKey = this.child_unique_key
+      this.componentRef.instance.parentRef = this;
+      this.components.push(this.componentRef)
+      this.listOfSelectedFilters.push(this.selectedFilter)
     }
   }
 
-  // removeComponent(key: any) {
+  isSelected(option: any): boolean {
+    return this.listOfSelectedFilters.includes(option.value)
+  }
 
-  //   if (this.container.length < 1) return;
+  isNotSelected(key: string) {
+    this.listOfSelectedFilters.forEach((element, index: number) => {
+      if (key == element) {
+        this.listOfSelectedFilters.splice(index, 1)
+        this.components.splice(index, 1)
+      }
+    });
+  }
 
-  //   let componentRef = this.componentReferences.filter(
-  //     x => x.instance.unique_key == key
-  //   )[0];
+  /**
+   * Función que carga los datos contenidos en los filtros
+   */
+  loadFiltersData() {
+    this.filtros.splice(0, this.filtros.length)
+    this.components.map((compRef: ComponentRef<any>) => {
+      this.filtros.push(compRef.instance.ObtenerFiltro())
+    })
+    this.consulta = {
+      id: 'id-prueba',
+      paginado: {
+        indice: 1,
+        tamano: 10
+      },
+      filtros: this.filtros
+    }
+    console.log("consulta", this.consulta);
+  }
 
-  //   let vcrIndex: number = this.container.indexOf(componentRef.instance.unique_key);
-  //   this.container.remove(vcrIndex);
-
-  //   this.componentReferences = this.componentReferences.filter(
-  //     x => x.instance.unique_key !== key
-  //   );
-  // }
 }

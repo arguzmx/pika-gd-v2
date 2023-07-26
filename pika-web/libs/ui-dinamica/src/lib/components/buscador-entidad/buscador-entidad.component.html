@@ -1,7 +1,16 @@
-<form [formGroup]="form">
-    <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"
-        (modelChange)="addFilter($event)"></formly-form>
-</form>
-<div>
+<div class="margen-top ant-row">
+    <div class="ant-col-8" style="margin-right: 1%;">
+        <nz-select nzShowSearch nzAllowClear [(ngModel)]="selectedFilter" (ngModelChange)="addFilter($event)"
+            nzPlaceHolder="Seleccione una propiedad">
+            <nz-option *ngFor="let option of propertis" [nzLabel]="option.label" [nzValue]="option.value"
+                [nzHide]="isSelected(option)"></nz-option>
+        </nz-select>
+    </div>
+    <div class="ant-col-2" *ngIf="components.length > 0">
+        <button nz-button nzType="primary" (click)="loadFiltersData()">Aplicar</button>
+    </div>
+</div>
+
+<div [id]="child_unique_key">
     <ng-template #viewContainerRef></ng-template>
 </div>

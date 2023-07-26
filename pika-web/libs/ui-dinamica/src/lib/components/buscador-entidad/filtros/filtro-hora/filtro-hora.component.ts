@@ -1,7 +1,6 @@
 import { Component, ComponentRef, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { OperadorFiltro } from '@pika-web/pika-cliente-api';
+import { Filtro, OperadorFiltro, Propiedad } from '@pika-web/pika-cliente-api';
+import { BuscadorEntidadComponent } from '../../buscador-entidad.component';
 
 @Component({
   selector: 'pika-web-filtro-hora',
@@ -12,83 +11,57 @@ export class FiltroHoraComponent {
 
 
   @Input() nombreComponente: string = 'i18nHora';
-  @Input() propiedades: any[];
+  @Input() propiedad: Propiedad;
   _ref: ComponentRef<any>;
-
-  form = new FormGroup({});
-  model: any = {};
-  options: FormlyFormOptions = {};
+  checked: boolean = false;
+  firstValue?: string;
+  secondValue?: string;
   operatorArray: any[] = []
+  selectValue: any;
+  operadorEntre: string;
+  childUniqueKey: string;
+  parentRef: BuscadorEntidadComponent;
 
-  fields: FormlyFieldConfig[] = [
-    {
-      validators: {
-        validation: [
-          { name: 'timeCompare', options: { errorPath: 'secondFilter' } }
-        ],
-      },
-      fieldGroupClassName: 'ant-row',
-      fieldGroup: [
-        {
-          key: 'no',
-          className: 'ant-col-2',
-          type: 'checkbox',
-          props: {
-            label: 'No'
-          }
-        },
-        {
-          key: 'operador',
-          className: 'ant-col-8',
-          defaultValue: '0',
-          type: 'select',
-          props: {
-            label: 'Operador',
-            placeholder: 'Seleccione una opción',
-            options: this.operatorOptions()
-          }
-        }
-      ]
-    },
-    {
-      fieldGroupClassName: 'ant-row',
-      fieldGroup: [
-        {
-          key: 'firstFilter',
-          className: 'ant-col-10',
-          type: 'customTime',
-          props: {
-            label: "Hora inicial"
-          }
-        },
-
-      ]
-    },
-    {
-      fieldGroupClassName: 'ant-row',
-      fieldGroup: [
-        {
-          key: 'secondFilter',
-          className: 'ant-col-10',
-          type: 'customTime',
-          props: {
-            label: 'Hora final'
-          },
-          expressions: {
-            hide: 'model.operador != "Entre"'
-          }
-        }
-      ]
-    }
-
-  ]
+  ngOnInit(): void {
+    this.operatorOptions();
+  }
 
   operatorOptions() {
-    for (var op in OperadorFiltro) { this.operatorArray.push({ label: op, value: op }) };
-    return this.operatorArray;
+    this.operatorArray.push({ label: OperadorFiltro.Igual, value: OperadorFiltro.Igual });
+    this.operatorArray.push({ label: OperadorFiltro.Entre, value: OperadorFiltro.Entre });
+    this.operatorArray.push({ label: OperadorFiltro.Mayor, value: OperadorFiltro.Mayor });
+    this.operatorArray.push({ label: OperadorFiltro.MayorIgual, value: OperadorFiltro.MayorIgual });
+    this.operatorArray.push({ label: OperadorFiltro.Menor, value: OperadorFiltro.Menor });
+    this.operatorArray.push({ label: OperadorFiltro.MenorIgual, value: OperadorFiltro.MenorIgual });
+    this.operadorEntre = OperadorFiltro.Entre
+  }
+
+  public ObtenerFiltro(): Filtro {
+    if (this.selectValue != this.operadorEntre) {
+      if (this.selectValue != undefined && this.firstValue != undefined) {
+        return {
+          campo: this.childUniqueKey,
+          negar: this.checked,
+          operador: this.selectValue,
+          valores: [this.firstValue!]
+        }
+      }
+    }
+    else {
+      if (this.selectValue != undefined && this.firstValue != undefined && this.secondValue != undefined) {
+        return {
+          campo: this.childUniqueKey,
+          negar: this.checked,
+          operador: this.selectValue,
+          valores: [this.firstValue!, this.secondValue!]
+        }
+      }
+    }
+    return null!;
   }
 
   removeObject() {
+    this.parentRef.isNotSelected(this.childUniqueKey);
     this._ref.destroy();
   }
 

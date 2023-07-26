@@ -1,7 +1,7 @@
 import { Component, ComponentRef, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { OperadorFiltro } from '@pika-web/pika-cliente-api';
+import { Filtro, OperadorFiltro, Propiedad } from '@pika-web/pika-cliente-api';
+import { BuscadorEntidadComponent } from '../../buscador-entidad.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'pika-web-filtro-texto-indexado',
@@ -11,61 +11,42 @@ import { OperadorFiltro } from '@pika-web/pika-cliente-api';
 export class FiltroTextoIndexadoComponent {
 
   @Input() nombreComponente: string = 'i18nTextoIndexado';
-  @Input() propiedades: any[];
+  @Input() propiedad: Propiedad;
   _ref: ComponentRef<any>;
-
-  form = new FormGroup({});
-  model: any = {};
-  options: FormlyFormOptions = {};
+  checked: boolean = false;
+  firstValue?: string;
   operatorArray: any[] = []
+  selectValue: any;
+  operadorEntre: string;
+  childUniqueKey: string;
+  parentRef: BuscadorEntidadComponent;
 
-  fields: FormlyFieldConfig[] = [
-    {
-      fieldGroupClassName: 'ant-row',
-      fieldGroup: [
-        {
-          key: 'no',
-          className: 'ant-col-2',
-          type: 'checkbox',
-          props: {
-            label: 'No'
-          }
-        },
-        {
-          key: 'operador',
-          className: 'ant-col-8',
-          defaultValue: '0',
-          type: 'select',
-          props: {
-            label: 'Operador',
-            placeholder: 'Seleccione una opción',
-            options: this.operatorOptions()
-          }
-        }
-      ]
-    },
-    {
-      fieldGroupClassName: 'ant-row',
-      fieldGroup: [
-        {
-          key: 'firstFilter',
-          className: 'ant-col-10',
-          type: 'input'
-        }
-      ]
-    }
-
-  ]
+  ngOnInit(): void {
+    this.operatorOptions();
+  }
 
   operatorOptions() {
-    for (var op in OperadorFiltro) { this.operatorArray.push({ label: op, value: op }) };
-    return this.operatorArray;
+    this.operatorArray.push({ label: OperadorFiltro.ComienzaCon, value: OperadorFiltro.ComienzaCon });
+    this.operatorArray.push({ label: OperadorFiltro.Contiene, value: OperadorFiltro.Contiene });
+    this.operatorArray.push({ label: OperadorFiltro.Igual, value: OperadorFiltro.Igual });
+    this.operatorArray.push({ label: OperadorFiltro.TerminaCon, value: OperadorFiltro.TerminaCon });
+    this.operatorArray.push({ label: OperadorFiltro.TextoCompleto, value: OperadorFiltro.TextoCompleto });
+  }
+
+  public ObtenerFiltro(): Filtro {
+    if (this.selectValue != undefined && this.firstValue != undefined) {
+      return {
+        campo: this.childUniqueKey,
+        negar: this.checked,
+        operador: this.selectValue,
+        valores: [this.firstValue!]
+      }
+    }
+    return null!;
   }
 
   removeObject() {
-    console.log(this._ref);
-
+    this.parentRef.isNotSelected(this.childUniqueKey);
     this._ref.destroy();
   }
-
 }

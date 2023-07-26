@@ -32,6 +32,10 @@ import { FiltroTextoIndexadoComponent } from './components/buscador-entidad/filt
 import { FiltroListaSeleccionSimpleComponent } from './components/buscador-entidad/filtros/filtro-lista-seleccion-simple/filtro-lista-seleccion-simple.component';
 import { FiltroListaSeleccionMultipleComponent } from './components/buscador-entidad/filtros/filtro-lista-seleccion-multiple/filtro-lista-seleccion-multiple.component';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 
 /**
  * Array para definir tipos de formularios personalizados para formly
@@ -54,68 +58,6 @@ const VALIDATIONMESSAGESFORM = [{ name: 'required', message: 'El campo es requer
  * Array para definir nombres de plantillas personalizadas para formly
  */
 const WRAPPERSFORM = [{ name: 'panel', component: PanelWrapperComponent }];
-
-/**
- * Funcion que valida hora final y hora inicial en controles filtroHora
- * @param control de tipo AbstractControl para obtener el valor de los input para filtro
- * @returns if error retorna mensaje else null
- */
-export function timeValidation(control: AbstractControl) {
-  const { firstFilter, secondFilter } = control.value;
-  if ((firstFilter != null || firstFilter != undefined) && (secondFilter != null || secondFilter != undefined)) {
-    if (secondFilter < firstFilter) { return { timeCompare: { message: 'Hora final no puede ser menor a hora inicial' } }; }
-  }
-  return null;
-}
-
-/**
- * Funcion que valida Fecha final y fecha inicial en controles filtroFecha
- * @param control de tipo AbstractControl para obtener el valor de los input para filtro
- * @returns if error retorna mensaje else null
- */
-export function dateValidation(control: AbstractControl) {
-  const { firstFilter, secondFilter } = control.value;
-  if ((firstFilter != null || firstFilter != undefined) && (secondFilter != null || secondFilter != undefined)) {
-    if (secondFilter < firstFilter) { return { dateCompare: { message: 'Fecha final no puede ser menor a fecha inicial' } }; }
-  }
-  return null;
-}
-
-/**
- * Funcion que valida Fecha final y fecha inicial en controles filtroFechaHora
- * @param control de tipo AbstractControl para obtener el valor de los input para filtro
- * @returns if error retorna mensaje else null
- */
-export function dateTimeValidation(control: AbstractControl) {
-  const { firstFilter, secondFilter } = control.value;
-  if ((firstFilter != null || firstFilter != undefined) && (secondFilter != null || secondFilter != undefined)) {
-    if (secondFilter < firstFilter) { return { dateTimeCompare: { message: 'Fecha y hora final no puede ser menor a fecha y hora inicial' } }; }
-  }
-  return null;
-}
-
-/**
- * Funcion que valida valores numericos iniciales y finales en controles filtroNumero y filtroDecimal
- * @param control de tipo AbstractControl para obtener el valor de los input para filtro
- * @returns if error retorna mensaje else null
- */
-export function numberValidation(control: AbstractControl) {
-  const { firstFilter, secondFilter } = control.value;
-  if ((firstFilter != null || firstFilter != undefined) && (secondFilter != null || secondFilter != undefined)) {
-    if (secondFilter < firstFilter) { return { numberCompare: { message: 'Valor final no puede ser menor a valor inicial' } }; }
-  }
-  return null;
-}
-
-/**
- * Array para definir nombres de validators para formly
- */
-const VALIDATORSMESSAGEFORM = [
-  { name: 'timeCompare', validation: timeValidation },
-  { name: 'dateCompare', validation: dateValidation },
-  { name: 'dateTimeCompare', validation: dateTimeValidation },
-  { name: 'numberCompare', validation: numberValidation }
-]
 
 @NgModule({
   declarations: [
@@ -145,10 +87,9 @@ const VALIDATORSMESSAGEFORM = [
     ReactiveFormsModule,
     FormsModule,
     FormlyModule.forRoot({
-      validators: [...VALIDATORSMESSAGEFORM],
       validationMessages: [...VALIDATIONMESSAGESFORM],
       types: [...TYPESFORM],
-      wrappers: [...WRAPPERSFORM],
+      wrappers: [...WRAPPERSFORM]
     }),
     FormlyBootstrapModule,
     FormlyNgZorroAntdModule,
@@ -157,6 +98,10 @@ const VALIDATORSMESSAGEFORM = [
     NzSelectModule,
     NzIconModule,
     NzGridModule,
+    NzFormModule,
+    NzCheckboxModule,
+    NzInputModule,
+    NzInputNumberModule,
     AgGridModule,
     NzSpaceModule,
     TranslateModule.forRoot({}),
