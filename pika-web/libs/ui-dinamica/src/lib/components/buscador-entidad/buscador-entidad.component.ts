@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, OnChanges, OnInit, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ComponentRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { FiltroTextoComponent } from './filtros/filtro-texto/filtro-texto.component';
 import { MetadatosService } from '../../services/metadatos.service';
 import { Consulta, Filtro, TipoDatos } from '@pika-web/pika-cliente-api';
@@ -21,8 +21,9 @@ import { FiltroTextoIndexadoComponent } from './filtros/filtro-texto-indexado/fi
 export class BuscadorEntidadComponent implements OnInit {
   @ViewChild('viewContainerRef', { read: ViewContainerRef }) container: ViewContainerRef;
 
+  @Input() entity: any;
+
   selectedFilter: string;
-  entity: any
   propertis: any[] = []
   child_unique_key: string
   listOfSelectedFilters: string[] = []
@@ -32,14 +33,13 @@ export class BuscadorEntidadComponent implements OnInit {
   consulta: Consulta;
   filtros: Array<Filtro> = [];
 
-  constructor(private metadataService: MetadatosService) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.getMetadata();
   }
 
   getMetadata() {
-    this.entity = this.metadataService.ObtieneMetadatosEntidad("entidad-demo")
     this.entity.propiedades.forEach((element: any) => {
       if (element.buscable) {
         this.propertis.push({ label: element.nombre, value: element.id, tipoDato: element.tipo })

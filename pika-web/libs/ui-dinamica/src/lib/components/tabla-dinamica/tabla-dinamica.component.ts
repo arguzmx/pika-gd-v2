@@ -69,10 +69,7 @@ export class TablaDinamicaComponent implements OnInit {
     }
   }
 
-  onPaginationChanged($event: PaginationChangedEvent) {
-
-  }
-
+  onPaginationChanged($event: PaginationChangedEvent) { }
 
   public defaultColDef: ColDef = {
     minWidth: 5,
@@ -115,7 +112,7 @@ export class TablaDinamicaComponent implements OnInit {
         this.body.paginado.indice = this.gridApi.paginationGetCurrentPage()
         this.metadataService.dataTable(this.body)
           .subscribe((data: any) => {
-
+            console.log("data en tabla dinamica", data);
             data.elementos[10] = {
               "id": "251",
               "idLogico": false,

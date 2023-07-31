@@ -1,8 +1,8 @@
 <p>editor-tabular works!</p>
 <button nz-button nzType="primary" (click)="showEntityEdit()">Editor Entidad</button>
-<pika-web-editor-entidad [createOrUpdateEntity]="createOrUpdateEntity" [isVisible]="isVisible"
-    (isVisibleChange)="isVisibleChange($event)" (sendEntityData)="recieveEntityData($event)">
+<pika-web-editor-entidad [createOrUpdateEntity]="createOrUpdateEntity" [fromApi]="fromApi" [entity]="entity"
+    [isVisible]="isVisible" (isVisibleChange)="isVisibleChange($event)" (sendEntityData)="recieveEntityData($event)">
 </pika-web-editor-entidad>
 
 <pika-web-tabla-dinamica></pika-web-tabla-dinamica>
-<pika-web-buscador-entidad></pika-web-buscador-entidad>
+<pika-web-buscador-entidad [entity]="entity"></pika-web-buscador-entidad>

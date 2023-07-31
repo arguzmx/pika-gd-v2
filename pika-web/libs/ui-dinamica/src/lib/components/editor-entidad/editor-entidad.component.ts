@@ -15,8 +15,10 @@ import { TranslateService } from '@ngx-translate/core';
 export class EditorEntidadComponent implements OnChanges {
 
   @Input() createOrUpdateEntity: string;
-  @Input() isVisible: boolean
-  @Input() rowData: any
+  @Input() isVisible: boolean;
+  @Input() rowData: any;
+  @Input() entity: any;
+  @Input() fromApi: boolean;
   @Output() isVisibleChange = new EventEmitter<boolean>();
   @Output() sendEntityData = new EventEmitter<object>();
 
@@ -29,7 +31,6 @@ export class EditorEntidadComponent implements OnChanges {
   deviceType: string = ''
   value: any
   activeLang = 'es'
-  entity: any
   id: string = 'id'
 
   //antcol debera ser retornado desde fuera para definir columnas
@@ -61,36 +62,39 @@ export class EditorEntidadComponent implements OnChanges {
 
   ngOnChanges(): void {
     if (this.isVisible) {
-
-
-      // Build form with api data
-
-      // try {
-      //   this.entity = this.metadataService.ObtieneMetadatosEntidad("entidad-demo")
-      //   this.deviceType = this.infoService.getOS()
-      //   this.fields.push({
-      //     fieldGroupClassName: 'ant-row',
-      //     fieldGroup: this.setFormProps(this.entity)
-      //   })
-      //   this.obj = this.metadataService.getLang(this.entity, this.activeLang)
-      //   this.translate.setTranslation(this.activeLang, this.obj)
-      // } catch (error) {
-      //   console.log(error);
-      // }
-
-
-      // data from table
-      try {
-        this.form = new FormGroup({})
-        this.form.reset()
-        this.deviceType = this.infoService.getOS()
-        this.fields.push({
-          fieldGroupClassName: 'ant-row',
-          fieldGroup: this.setFormPropsFromTable(this.rowData)
-        })
-      } catch (error) {
-        console.log(error);
+      if (this.fromApi) {
+        this.createFormApi();
+      } else {
+        this.createFormDataTable();
       }
+    }
+  }
+
+  createFormApi() {
+    try {
+      this.deviceType = this.infoService.getOS()
+      this.fields.push({
+        fieldGroupClassName: 'ant-row',
+        fieldGroup: this.setFormProps(this.entity)
+      })
+      this.obj = this.metadataService.getLang(this.entity, this.activeLang)
+      this.translate.setTranslation(this.activeLang, this.obj)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  createFormDataTable() {
+    try {
+      this.form = new FormGroup({})
+      this.form.reset()
+      this.deviceType = this.infoService.getOS()
+      this.fields.push({
+        fieldGroupClassName: 'ant-row',
+        fieldGroup: this.setFormPropsFromTable(this.rowData)
+      })
+    } catch (error) {
+      console.log(error);
     }
   }
 
