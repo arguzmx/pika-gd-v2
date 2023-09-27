@@ -1,32 +1,40 @@
-<div class="ant-row margen-top">
-    <div class="ant-col-4">
-        {{nombreComponente}}
+<form nz-form [formGroup]="validateForm">
+    <div class="ant-row margen-top">
+        <div class="ant-col-4">
+            {{nombreComponente}}
+        </div>
+        <div class="ant-col-6">
+            <span nz-icon nzType="close" nzTheme="outline" style="float: right; cursor: pointer;"
+                (click)="removeObject()"></span>
+        </div>
     </div>
-    <div class="ant-col-6">
-        <span nz-icon nzType="close" nzTheme="outline" style="float: right; cursor: pointer;"
-            (click)="removeObject()"></span>
+    <div class="ant-row margen-top">
+        <div class="ant-col-2">
+            <label nz-checkbox formControlName="check">No</label>
+        </div>
+        <div class="ant-col-8">
+            <nz-form-control>
+                <nz-select nzShowSearch nzAllowClear formControlName="select" (ngModelChange)="requiredChange($event)">
+                    <nz-option *ngFor="let option of operatorArray" [nzLabel]="option.label"
+                        [nzValue]="option.value"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </div>
     </div>
-</div>
-<div class="ant-row margen-top">
-    <div class="ant-col-2">
-        <label nz-checkbox [(ngModel)]="checked">No</label>
+    <div class="ant-row margen-top">
+        <div class="ant-col-10">
+            <nz-form-control>
+                <nz-date-picker style="width: 100%;" nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss"
+                    formControlName="first"></nz-date-picker>
+            </nz-form-control>
+        </div>
     </div>
-    <div class="ant-col-8">
-        <nz-select nzShowSearch nzAllowClear [(ngModel)]="selectValue">
-            <nz-option *ngFor="let option of operatorArray" [nzLabel]="option.label"
-                [nzValue]="option.value"></nz-option>
-        </nz-select>
+    <div *ngIf="validateForm.value.select == operadorEntre" class="ant-row margen-top">
+        <div class="ant-col-10">
+            <nz-form-control>
+                <nz-date-picker style="width: 100%;" nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" formControlName="second"
+                    (ngModelChange)="validateValues()"></nz-date-picker>
+            </nz-form-control>
+        </div>
     </div>
-</div>
-<div class="ant-row margen-top">
-    <div class="ant-col-10">
-        <nz-date-picker style="width: 100%;" nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss"
-            [(ngModel)]="firstValue"></nz-date-picker>
-    </div>
-</div>
-<div *ngIf="selectValue == operadorEntre" class="ant-row margen-top">
-    <div class="ant-col-10">
-        <nz-date-picker style="width: 100%;" nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss"
-            [(ngModel)]="secondValue"></nz-date-picker>
-    </div>
-</div>
+</form>

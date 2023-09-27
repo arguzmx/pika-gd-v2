@@ -1,6 +1,7 @@
 import { Component, ComponentRef, Input } from '@angular/core';
 import { Filtro, OperadorFiltro, Propiedad } from '@pika-web/pika-cliente-api';
 import { BuscadorEntidadComponent } from '../../buscador-entidad.component';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'pika-web-filtro-lista-seleccion-simple',
@@ -19,9 +20,23 @@ export class FiltroListaSeleccionSimpleComponent {
   operadorEntre: string;
   childUniqueKey: string;
   parentRef: BuscadorEntidadComponent;
+  validateForm!: UntypedFormGroup
+
+  constructor(private fb: UntypedFormBuilder) {
+
+  }
 
   ngOnInit(): void {
+    this.createForm();
     this.operatorOptions();
+  }
+
+  createForm() {
+    this.validateForm = this.fb.group({
+      check: [false],
+      select: [null, [Validators.required]],
+      valueText: [null, [Validators.required]]
+    })
   }
 
   operatorOptions() {
@@ -29,15 +44,26 @@ export class FiltroListaSeleccionSimpleComponent {
   }
 
   public ObtenerFiltro(): Filtro {
-    if (this.selectValue != undefined && this.firstValue != undefined) {
+    if (this.validateForm.valid) {
       return {
         campo: this.childUniqueKey,
-        negar: this.checked,
-        operador: this.selectValue,
-        valores: [this.firstValue!]
+        negar: this.validateForm.value.check,
+        operador: this.validateForm.value.select,
+        valores: [this.validateForm.value.valueText]
       }
+    } else {
+      this.invalidaForm();
     }
     return null!;
+  }
+
+  invalidaForm() {
+    Object.values(this.validateForm.controls).forEach(control => {
+      if (control.invalid) {
+        control.markAsDirty();
+        control.updateValueAndValidity({ onlySelf: true });
+      }
+    });
   }
 
   removeObject() {

@@ -1,6 +1,7 @@
 import { Component, ComponentRef, Input } from '@angular/core';
 import { Filtro, OperadorFiltro, Propiedad } from '@pika-web/pika-cliente-api';
 import { BuscadorEntidadComponent } from '../../buscador-entidad.component';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'pika-web-filtro-hora',
@@ -21,9 +22,24 @@ export class FiltroHoraComponent {
   operadorEntre: string;
   childUniqueKey: string;
   parentRef: BuscadorEntidadComponent;
+  validateForm!: UntypedFormGroup;
+
+  constructor(private fb: UntypedFormBuilder) {
+
+  }
 
   ngOnInit(): void {
+    this.createForm();
     this.operatorOptions();
+  }
+
+  createForm() {
+    this.validateForm = this.fb.group({
+      check: [false],
+      select: [null, [Validators.required]],
+      first: [null, [Validators.required]],
+      second: [null]
+    })
   }
 
   operatorOptions() {
@@ -37,24 +53,28 @@ export class FiltroHoraComponent {
   }
 
   public ObtenerFiltro(): Filtro {
-    if (this.selectValue != this.operadorEntre) {
-      if (this.selectValue != undefined && this.firstValue != undefined) {
+    if (this.validateForm.value.select != this.operadorEntre) {
+      if (this.validateForm.valid) {
         return {
           campo: this.childUniqueKey,
-          negar: this.checked,
-          operador: this.selectValue,
-          valores: [this.firstValue!]
+          negar: this.validateForm.value.check,
+          operador: this.validateForm.value.select,
+          valores: [this.validateForm.value.first]
         }
+      } else {
+        this.invalidForm();
       }
     }
     else {
-      if (this.selectValue != undefined && this.firstValue != undefined && this.secondValue != undefined) {
+      if (this.validateForm.valid) {
         return {
           campo: this.childUniqueKey,
-          negar: this.checked,
-          operador: this.selectValue,
-          valores: [this.firstValue!, this.secondValue!]
+          negar: this.validateForm.value.check,
+          operador: this.validateForm.value.select,
+          valores: [this.validateForm.value.first, this.validateForm.value.second]
         }
+      } else {
+        this.invalidForm();
       }
     }
     return null!;
@@ -63,6 +83,36 @@ export class FiltroHoraComponent {
   removeObject() {
     this.parentRef.isNotSelected(this.childUniqueKey);
     this._ref.destroy();
+  }
+
+  invalidForm() {
+    Object.values(this.validateForm.controls).forEach(control => {
+      if (control.invalid) {
+        control.markAsDirty();
+        if (!this.validateValues()) {
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      }
+    });
+  }
+
+  requiredChange(value: string) {
+    if (value == this.operadorEntre) {
+      this.validateForm.get('second')!.setValidators(Validators.required);
+    } else {
+      this.validateForm.get('second')!.clearValidators();
+      this.validateForm.get('second')!.markAsPristine();
+    }
+    this.validateForm.get('second')!.updateValueAndValidity();
+  }
+
+  validateValues() {
+    if (this.validateForm.value.second < this.validateForm.value.first) {
+      this.validateForm.controls['second'].setErrors({ error: true })
+      return true
+    } else {
+      return false
+    }
   }
 
 }

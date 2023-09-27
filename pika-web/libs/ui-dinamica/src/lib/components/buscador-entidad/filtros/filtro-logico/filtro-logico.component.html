@@ -1,17 +1,21 @@
-<div class="ant-row margen-top">
-    <div class="ant-col-4">
-        {{nombreComponente}}
+<form nz-form [formGroup]="validateForm">
+    <div class="ant-row margen-top">
+        <div class="ant-col-4">
+            {{nombreComponente}}
+        </div>
+        <div class="ant-col-6">
+            <span nz-icon nzType="close" nzTheme="outline" style="float: right; cursor: pointer;"
+                (click)="removeObject()"></span>
+        </div>
     </div>
-    <div class="ant-col-6">
-        <span nz-icon nzType="close" nzTheme="outline" style="float: right; cursor: pointer;"
-            (click)="removeObject()"></span>
+    <div class="ant-row margen-top">
+        <div class="ant-col-10">
+            <nz-form-control>
+                <nz-select nzShowSearch nzAllowClear formControlName="value">
+                    <nz-option nzValue="true" nzLabel="true"></nz-option>
+                    <nz-option nzValue="false" nzLabel="false"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </div>
     </div>
-</div>
-<div class="ant-row margen-top">
-    <div class="ant-col-10">
-        <nz-select nzShowSearch nzAllowClear [(ngModel)]="firstValue">
-            <nz-option nzValue="true" nzLabel="true"></nz-option>
-            <nz-option nzValue="false" nzLabel="false"></nz-option>
-        </nz-select>
-    </div>
-</div>
+</form>

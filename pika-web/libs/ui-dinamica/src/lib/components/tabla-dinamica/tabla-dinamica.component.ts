@@ -112,7 +112,6 @@ export class TablaDinamicaComponent implements OnInit {
         this.body.paginado.indice = this.gridApi.paginationGetCurrentPage()
         this.metadataService.dataTable(this.body)
           .subscribe((data: any) => {
-            console.log("data en tabla dinamica", data);
             data.elementos[10] = {
               "id": "251",
               "idLogico": false,
@@ -131,8 +130,6 @@ export class TablaDinamicaComponent implements OnInit {
               "idTexto": "John Lennon",
               "idTextoIndexado": "La vida es aquello que te va sucediendo mientras te empeñas en hacer otros planes"
             }
-
-
             this.totalKeys = Object.keys(data.elementos).length
             if (this.columnDefs.length < this.totalKeys) {
               for (var key in data.elementos[0]) { this.columnDefs.push({ field: key }) }
@@ -144,7 +141,6 @@ export class TablaDinamicaComponent implements OnInit {
               if (typeof element.idEntero == 'object') {
                 element.idEntero = this.valueFormater(element.idEntero)
               }
-
             })
             this.gridApi.setColumnDefs(this.columnDefs)
             params.successCallback(data.elementos, data.total)

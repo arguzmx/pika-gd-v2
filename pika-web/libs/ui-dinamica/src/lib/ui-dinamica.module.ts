@@ -36,6 +36,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzFormStatusService } from 'ng-zorro-antd/core/form';
 
 /**
  * Array para definir tipos de formularios personalizados para formly
@@ -97,6 +98,7 @@ const WRAPPERSFORM = [{ name: 'panel', component: PanelWrapperComponent }];
     NzTimePickerModule,
     NzSelectModule,
     NzIconModule,
+    ReactiveFormsModule,
     NzGridModule,
     NzFormModule,
     NzCheckboxModule,

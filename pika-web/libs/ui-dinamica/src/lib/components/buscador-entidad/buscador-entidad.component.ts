@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ComponentRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { FiltroTextoComponent } from './filtros/filtro-texto/filtro-texto.component';
-import { MetadatosService } from '../../services/metadatos.service';
 import { Consulta, Filtro, TipoDatos } from '@pika-web/pika-cliente-api';
 import { FiltroDecimalComponent } from './filtros/filtro-decimal/filtro-decimal.component';
 import { FiltroEnteroComponent } from './filtros/filtro-entero/filtro-entero.component';
@@ -11,6 +10,7 @@ import { FiltroListaSeleccionMultipleComponent } from './filtros/filtro-lista-se
 import { FiltroListaSeleccionSimpleComponent } from './filtros/filtro-lista-seleccion-simple/filtro-lista-seleccion-simple.component';
 import { FiltroLogicoComponent } from './filtros/filtro-logico/filtro-logico.component';
 import { FiltroTextoIndexadoComponent } from './filtros/filtro-texto-indexado/filtro-texto-indexado.component';
+import { FormControl, UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'pika-web-buscador-entidad',
@@ -52,7 +52,7 @@ export class BuscadorEntidadComponent implements OnInit {
    * @param event evento de nz-select
    */
   addFilter(event: any): void {
-    var filter;
+    var filter: any;
     var filterName: string = ""
     this.propertis.forEach((element: any, index: number) => {
       if (event == element.value) {
@@ -118,22 +118,29 @@ export class BuscadorEntidadComponent implements OnInit {
   }
 
   /**
-   * Función que carga los datos contenidos en los filtros
+   * Función que carga los datos contenidos en los filtros creados
    */
   loadFiltersData() {
     this.filtros.splice(0, this.filtros.length)
     this.components.map((compRef: ComponentRef<any>) => {
-      this.filtros.push(compRef.instance.ObtenerFiltro())
+      compRef.instance.ObtenerFiltro();
+      if (compRef.instance.validateForm.valid) {
+        this.filtros.push(compRef.instance.ObtenerFiltro())
+      }
     })
-    this.consulta = {
-      id: 'id-prueba',
-      paginado: {
-        indice: 1,
-        tamano: 10
-      },
-      filtros: this.filtros
+    if (this.filtros.length > 0) {
+      this.consulta = {
+        id: 'id-prueba',
+        paginado: {
+          indice: 1,
+          tamano: 10
+        },
+        filtros: this.filtros
+      }
+      console.log("consulta", this.consulta);
+    } else {
+      console.log("no hay filtros");
     }
-    console.log("consulta", this.consulta);
   }
 
 }

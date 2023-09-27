@@ -34,7 +34,6 @@ export class EditorTabularComponent implements OnInit {
 
   getMetadata() {
     this.entity = this.metadataService.ObtieneMetadatosEntidad("entidad-demo")
-    console.log(this.entity);
   }
 
   isVisibleChange($event: boolean) {
